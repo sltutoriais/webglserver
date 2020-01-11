@@ -29,9 +29,10 @@ io.on('connection', function(socket){
 	
 	
 	//create a callback fuction to listening EmitPing() method in NetworkMannager.cs unity script
-	socket.on('PING', function (_pack)
+	socket.on('PING', function (pack)
 	{
-	  var pack = JSON.parse(_pack);	
+	  //console.log('_pack# '+_pack);
+	  //var pack = JSON.parse(_pack);	
 
 	    console.log('message from user# '+socket.id+": "+pack.msg);
         
@@ -151,7 +152,7 @@ io.on('connection', function(socket){
 	   
 	    //send to the client.js script
 	   //updates the animation of the player for the other game clients
-       socket.broadcast.emit('UPDATE_PLAYER_ANIMATOR', currentUser.id,currentUser.animation);
+       socket.broadcast.emit('UPDATE_PLAYER_ANIMATOR', currentUser.id,data.animation);
 	   
       }//END_IF
 	  

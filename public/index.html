@@ -6,11 +6,12 @@
     <title>Unity WebGL Player | Basic WebGL Multiplayer Online Project</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="TemplateData/UnityProgress.js"></script>  
+    <script src="TemplateData/UnityProgress.js"></script>
     <script src="Build/UnityLoader.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="client.js"></script>
     <script>
+	  var socket = io();
       var gameInstance = UnityLoader.instantiate("gameContainer", "Build/public.json", {onProgress: UnityProgress});
     </script>
   </head>
