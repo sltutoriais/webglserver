@@ -11,13 +11,13 @@ window.addEventListener('load', function() {
 		if(gameInstance!=null)
 		{
 		//fit formats the message to send to the Unity client game, take a look in NetworkManager.cs in Unity
-		gameInstance.SendMessage("NetworkController", method, args.join(','));
+		gameInstance.SendMessage("NetworkManager", method, args.join(','));
 		
 		}
 		else if(unityInstance!=null)
 		{
 		  //fit formats the message to send to the Unity client game, take a look in NetworkManager.cs in Unity
-		  unityInstance.SendMessage("NetworkController", method, args.join(','));
+		  unityInstance.SendMessage("NetworkManager", method, args.join(','));
 		
 		}
 		
