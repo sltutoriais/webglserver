@@ -1,12 +1,15 @@
 {
-"companyName": "SebastiaoLucio",
+"companyName": "Rio 3D Studios",
 "productName": "Basic WebGL Multiplayer Online Project",
+"productVersion": "1.0",
 "dataUrl": "public.data.unityweb",
 "wasmCodeUrl": "public.wasm.code.unityweb",
 "wasmFrameworkUrl": "public.wasm.framework.unityweb",
-"TOTAL_MEMORY": 268435456,
-"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
 "webglContextAttributes": {"preserveDrawingBuffer": false},
 "splashScreenStyle": "Dark",
-"backgroundColor": "#231F20"
+"backgroundColor": "#231F20",
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.3.0f6"
 }
