@@ -32,9 +32,9 @@ window.addEventListener('load', function() {
 	});//END_SOCKET.ON
 
 					      
-	socket.on('LOGIN_SUCCESS', function(id,name,position,rotation) {
+	socket.on('LOGIN_SUCCESS', function(id,name,avatar,position) {
 				      		
-	  var currentUserAtr = id+':'+name+':'+position+':'+rotation;
+	  var currentUserAtr = id+':'+name+':'+avatar+':'+position;
 	  
 	   if(unityInstance!=null)
 		{
@@ -46,9 +46,9 @@ window.addEventListener('load', function() {
 	});//END_SOCKET.ON
 	
 		
-	socket.on('SPAWN_PLAYER', function(id,name,position,rotation) {
+	socket.on('SPAWN_PLAYER', function(id,name,avatar,position) {
 	
-	    var currentUserAtr = id+':'+name+':'+position+':'+rotation;
+	    var currentUserAtr = id+':'+name+':'+avatar+':'+position;
 		
 		if(unityInstance!=null)
 		{
@@ -59,8 +59,8 @@ window.addEventListener('load', function() {
 		
 	});//END_SOCKET.ON
 	
-	socket.on('RESPAW_PLAYER', function(id,name,position,rotation) {
-	    var currentUserAtr = id+':'+name+':'+position+':'+rotation;
+	socket.on('RESPAWN_PLAYER', function(id,name,avatar,position) {
+	    var currentUserAtr = id+':'+name+':'+avatar+':'+position;
 		
 	 if(unityInstance!=null)
 		{
@@ -93,13 +93,13 @@ window.addEventListener('load', function() {
 		
 	});//END_SOCKET.ON
 
-	socket.on('UPDATE_ATACK', function(targetId) {
+	socket.on('UPDATE_ATTACK', function(currentUserId) {
 	
-	    var currentUserAtr = targetId;
+	    var currentUserAtr = currentUserId;
 		
 	if(unityInstance!=null)
 		{
-		    unityInstance.SendMessage ('NetworkManager', 'OnUpdateAtack',currentUserAtr);
+		    unityInstance.SendMessage ('NetworkManager', 'OnUpdateAttack',currentUserAtr);
 		
 		}
 		
@@ -117,9 +117,9 @@ window.addEventListener('load', function() {
 		
 	});//END_SOCKET.ON
 	
-    socket.on('UPDATE_PHISICS_DAMAGE', function(shooterId,targetId,targetHealth) {
+    socket.on('UPDATE_PHISICS_DAMAGE', function(targetId,targetHealth) {
 	
-	     var currentUserAtr = shooterId+':'+targetId+':'+targetHealth;
+	     var currentUserAtr = targetId+':'+targetHealth;
 		 
 		if(unityInstance!=null)
 		{

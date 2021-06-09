@@ -1,7 +1,7 @@
 {
-"companyName": "Rio 3D Studios",
-"productName": "Basic WebGL Multiplayer Online Project",
-"productVersion": "1.0",
+"companyName": "Rio3DStudios",
+"productName": "WebGL Multiplayer Template",
+"productVersion": "0.1",
 "dataUrl": "public.data.unityweb",
 "wasmCodeUrl": "public.wasm.code.unityweb",
 "wasmFrameworkUrl": "public.wasm.framework.unityweb",
@@ -9,6 +9,7 @@
 "webglContextAttributes": {"preserveDrawingBuffer": false},
 "splashScreenStyle": "Dark",
 "backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"},
 "developmentBuild": false,
 "multithreading": false,
 "unityVersion": "2019.3.0f6"

@@ -1,7 +1,6 @@
 /*
-*@autor: Sebastiao Lucio Reis de Souza
-*@description:  java script file that works as master server of the webGL Unity Multiplayer Online Game
-*@data: 08/05/19
+*@autor: Rio 3D Studios
+*@description:  java script server that works as master server of the Basic Example of WebGL Multiplayer Kit
 */
 var express  = require('express');//import express NodeJS framework module
 var app      = express();// create an object of the express module
@@ -29,16 +28,16 @@ io.on('connection', function(socket){
 	
 	
 	//create a callback fuction to listening EmitPing() method in NetworkMannager.cs unity script
-	socket.on('PING', function (pack)
+	socket.on('PING', function (_pack)
 	{
 	  //console.log('_pack# '+_pack);
-	  //var pack = JSON.parse(_pack);	
+	  var pack = JSON.parse(_pack);	
 
 	    console.log('message from user# '+socket.id+": "+pack.msg);
         
 		 //emit back to NetworkManager in Unity by client.js script
-		socket.emit('PONG', socket.id,pack.msg);
-     
+		 socket.emit('PONG', socket.id,pack.msg);
+		
 	});
 	
 	//create a callback fuction to listening EmitJoin() method in NetworkMannager.cs unity script
@@ -52,9 +51,10 @@ io.on('connection', function(socket){
          // fills out with the information emitted by the player in the unity
         currentUser = {
 			       name:data.name,
+				   avatar:data.avatar,
                    position:data.position,
-				   rotation:'0,0,0,0',
-			       id:shortId.generate(),//alternatively we could use socket.id
+				   rotation:'0',
+			       id:socket.id,//alternatively we could use socket.id
 				   socketID:socket.id,//fills out with the id of the socket that was open
 				   animation:"",
 				   health:100,
@@ -78,29 +78,29 @@ io.on('connection', function(socket){
 		 /*********************************************************************************************/		
 		
 		//send to the client.js script
-		socket.emit("LOGIN_SUCCESS",currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);//emite para o metodo NetworkController.OnLoginSuccess(SocketIOEvent _myPlayer)
+		socket.emit("LOGIN_SUCCESS",currentUser.id,currentUser.name,currentUser.avatar,currentUser.position);
 		
          //spawn all connected clients for currentUser client 
          clients.forEach( function(i) {
 		    if(i.id!=currentUser.id)
-			{
-		     // console.log('[INFO] generate ' + i.name+ ' connected!');
-				 
+			{ 
 		      //send to the client.js script
-		      socket.emit('SPAWN_PLAYER',i.id,i.name,i.position,i.rotation);
+		      socket.emit('SPAWN_PLAYER',i.id,i.name,i.avatar,i.position);
+			  
 		    }//END_IF
 	   
 	     });//end_forEach
 		
 		 // spawn currentUser client on clients in broadcast
-		socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
+		socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.avatar,currentUser.position);
+		
   
 	});//END_SOCKET_ON
 	
 	
 	
     //create a callback fuction to listening method in NetworkMannager.cs unity script
-	socket.on('RESPAW', function (_info) {
+	socket.on('RESPAWN', function (_info) {
 	
 	    var info = JSON.parse(_info);	  
 		
@@ -111,10 +111,10 @@ io.on('connection', function(socket){
 		
 		    currentUser.health = currentUser.maxHealth;
 			 
-		    socket.emit('RESPAW_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
-			 
-		    socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
-			 
+		    socket.emit('RESPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.avatar,currentUser.position);
+		 
+		    socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.avatar,currentUser.position);
+		    
 	        console.log('[INFO] User ' + currentUser.name + ' respawned!');
 			
 		}
@@ -136,6 +136,7 @@ io.on('connection', function(socket){
 	  
 	   // send current user position and  rotation in broadcast to all clients in game
        socket.broadcast.emit('UPDATE_MOVE_AND_ROTATE', currentUser.id,currentUser.position,currentUser.rotation);
+	
       
        }
 	});//END_SOCKET_ON
@@ -145,6 +146,7 @@ io.on('connection', function(socket){
 	socket.on('ANIMATION', function (_data)
 	{
 	  var data = JSON.parse(_data);	
+	  
 	  if(currentUser)
 	  {
 	   
@@ -153,6 +155,7 @@ io.on('connection', function(socket){
 	    //send to the client.js script
 	   //updates the animation of the player for the other game clients
        socket.broadcast.emit('UPDATE_PLAYER_ANIMATOR', currentUser.id,data.animation);
+	
 	   
       }//END_IF
 	  
@@ -160,14 +163,13 @@ io.on('connection', function(socket){
 	
 
 	//create a callback fuction to listening EmitAnimation() method in NetworkMannager.cs unity script
-	socket.on('ATACK', function (_data)
+	socket.on('ATTACK', function ()
 	{
-	  var data = JSON.parse(_data);	
 	  
 	  if(currentUser)
 	  {
-	   
-        socket.broadcast.emit('UPDATE_ATACK', currentUser.id);
+	   // console.log("attack received");
+		socket.broadcast.emit('UPDATE_ATTACK', currentUser.id);
       }
 	  
 	});//END_SOCKET_ON
@@ -176,6 +178,7 @@ io.on('connection', function(socket){
 	//create a callback fuction to listening EmitPhisicstDamage method in NetworkMannager.cs unity script
 	socket.on('PHISICS_DAMAGE', function (_data)
 	{
+	
 	  var data = JSON.parse(_data);	
       if(currentUser)
 	  {
@@ -188,9 +191,9 @@ io.on('connection', function(socket){
 	   // if health target is not empty
 	   if(target.health - _damage > 0)
 	    {
-		   console.log("player: "+target.name+"receive damage from : "+currentUser.name);
+		  // console.log("player: "+target.name+"receive damage from : "+currentUser.name);
 		   
-		   console.log(target.name+"health: "+ target.health);
+		 //  console.log(target.name+"health: "+ target.health);
 		   
 		   target.health -=_damage;//decrease target health
 		}
@@ -210,7 +213,6 @@ io.on('connection', function(socket){
 		 currentUser.kills +=1;
 		
 		 jo_pack = {
-				shooterId:currentUser.id,
 		        targetId:data.targetId
 		 };
 	 
@@ -225,14 +227,12 @@ io.on('connection', function(socket){
 		  
 	damage_pack = {
 		 
-		       name:target.name,
-				shooterId:currentUser.id,
 				targetId:data.targetId,
 				targetHealth:target.health
 		 }
 	
-	  
-	   socket.broadcast.emit("UPDATE_PHISICS_DAMAGE",damage_pack.shooterId,damage_pack.targetId,damage_pack.targetHealth);
+	    socket.emit("UPDATE_PHISICS_DAMAGE",damage_pack.targetId,damage_pack.targetHealth);
+	    socket.broadcast.emit("UPDATE_PHISICS_DAMAGE",damage_pack.targetId,damage_pack.targetHealth);
 			   
 	}//END_IF
 	  
@@ -264,6 +264,7 @@ io.on('connection', function(socket){
 		};
 		
 		}
+		
     });//END_SOCKET_ON
 		
 });//END_IO.ON
